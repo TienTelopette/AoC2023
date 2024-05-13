@@ -5,6 +5,7 @@ games = file.read().splitlines()
 powers = 0
 
 def get_power_from_round(game):
+    # Returns the power of the mins of each cube color from a row
     game_id = int(game.split(":")[0].split(" ")[1])
     game = game.split(":")[1]
     rounds = game.split(";")
