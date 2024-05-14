@@ -1,14 +1,15 @@
-file = open("C:/Users/ttche/Desktop/AoC2023/Day_1/input.txt","r")
+import re
+file = open("/Users/Tien/Documents/GitHub/AoC2023/Day_1/test_input.txt","r")
 lines = file.read().splitlines()
 
 worded_digits = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
 def get_line_digit(line):
-    for char in line:
-        if char.isdigit():
-            return char
+    # returns first number found from line
+    return re.search(r"\d+", line).group()
 
 def replace_all_words(line):
+    # replace all english numbers with number + english number + number
     for num in worded_digits:
         line = line.replace(num, num + str(worded_digits.index(num)) + num)
     return line

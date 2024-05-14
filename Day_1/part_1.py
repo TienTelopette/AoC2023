@@ -1,18 +1,15 @@
-file = open("C:/Users/ttche/Desktop/AoC2023/Day_1/input.txt","r")
+import re
+file = open("/Users/Tien/Documents/GitHub/AoC2023/Day_1/test_input.txt","r")
 lines = file.readlines()
 
 def get_line_digit(line):
-    for char in line:
-        if char.isdigit():
-            return char
+   # returns first number found from line
+   return re.search(r"\d+", line).group()
 
 def get_line_values(lines):
-    lines_values = []
-    for line in lines:
-        line_value = get_line_digit(line) + get_line_digit(line[::-1])
-        lines_values.append(int(line_value))
+    # returns list of first and last number of each line
+    lines_values = [int(get_line_digit(line) + get_line_digit(line[::-1])) for line in lines]
     return lines_values
-
 
 lines_values_total = get_line_values(lines)
 
