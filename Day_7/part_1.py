@@ -3,6 +3,9 @@ import pandas as pd
 
 file = open("/Users/Tien/Documents/GitHub/AoC2023/Day_7/test_input.txt","r")
 Hands = file.read().splitlines()
+Cards = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
+CARDS = {card: value for value, card in enumerate(Cards, 2)}
+
 
 def get_occurrences_and_remove(to_remove, string):
     occurrences = string.count(to_remove)
@@ -14,31 +17,35 @@ labels = ["hand", "bid", "occurrences"]
 data["hand"] = []
 data["bid"] = []
 data["occurrences"] = []
+data["values"] = []
+
 
 for hand in Hands:
     temp_hand = hand.split(" ")[0]
-    temp_duplicated_cards = []
+    temp_occurrences = []
     bid = int(hand.split(" ")[1])
     data["hand"].append(temp_hand)
+    data["values"].append([CARDS[card] for card in temp_hand])
 
     while temp_hand:
         temp_hand, occurrences = get_occurrences_and_remove(temp_hand[0], temp_hand)
-        temp_duplicated_cards.append(occurrences)
+        temp_occurrences.append(occurrences)
     
     data["bid"].append(int(bid))
-    data["occurrences"].append("".join(str(a) for a in sorted(temp_duplicated_cards, reverse = True)))
+    data["occurrences"].append("".join(str(a) for a in sorted(temp_occurrences, reverse = True)))
 
-cards = pd.DataFrame(data)[labels]
-cards = cards.sort_values(by = "occurrences", ascending = False)
+cards = pd.DataFrame(data)
+cards = cards.sort_values(by = "occurrences", ascending = False).reset_index(drop = True)
 
-for i in range(len(cards)):
-    lst = cards.iloc[i,:]
-    print(lst)
-
-
-# def by_max_num_duplicates(l):
-#     return max(l)
-
-# Duplicated_cards.sort(key = by_max_num_duplicates)
+result = pd.DataFrame(columns = labels)
+for name, group in cards.groupby(by = "occurrences", sort=False):
+    temp = group.sort_values(by = "values", ascending = False)
+    result = pd.concat([result, temp])
 
 
+result = result.iloc[::-1]
+
+bids = result.bid.tolist()
+points = 0
+[points := points + bids[i] * (i + 1) for i in range(len(bids))]
+print(points)
